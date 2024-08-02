@@ -1,0 +1,43 @@
+TSA 5 
+#:Measurement of Seasonal indices Ratio-to-Trend method.
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+date_range = pd.date_range(start = '2018-01-01', end = '2022-12-31' , freq = 'M') 
+data = pd.DataFrame({
+    'date': date_range, 
+    'values': np.random.rand(len(date_range)) * 100+ 500
+})
+date_range
+---
+data.set_index('date', inplace=True)
+trend = data.rolling(window=12).mean()
+trend.head()
+--
+seasonal_indices = data / trend
+seasonal_indices.head()
+--
+average_seasonal_indices = seasonal_indices.groupby(seasonal_indices.index.month).mean()
+average_seasonal_indices.head()
+--
+plt.figure(figsize=(10,6))
+plt.plot(data.index, data.values, label='Original Data')
+plt.plot(trend.index, trend.values, label='Trend')
+plt.legend()
+plt.title('Original Data and Trend')
+plt.show()
+--
+#AVERAGE SEASONAL INDICES
+plt.figure(figsize=(10, 6))
+plt.plot(average_seasonal_indices.index, average_seasonal_indices.values, label='Average Seasonal Indices:')
+plt.legend()
+plt.title('Average Seasonal Indices')
+plt.show()
+
+#SEASONAL INDICES
+plt.figure(figsize=(10, 6))
+plt.plot(seasonal_indices.index, seasonal_indices.values, label='Seasonal Indices:')
+plt.legend()
+plt.title('Seasonal Indices')
+plt.show()

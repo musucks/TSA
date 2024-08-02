@@ -1,0 +1,63 @@
+TSA 2
+#GOMPERTZ CURVE
+
+import pandas as pd
+import numpy as np
+from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
+
+# Read the data into a DataFrame
+df = pd.read_csv("D:/COLLEGE/SEM 2/TIME SERIES ANANLYSIS/GOLDEN.csv", parse_dates=['Date'])
+
+# Convert the Date column to datetime format and create a numerical representation
+df['Days'] = (df['Date'] - df['Date'].min()).dt.days
+# Extract the days and values for fitting
+x = df['Days'].values
+y = df['Value'].values
+
+# Scale the data
+x_scaled = x / max(x)
+y_scaled = y / max(y)
+
+# Define the Gompertz function
+def gompertz(x, a, b, c):
+    return a * np.exp(-b * np.exp(-c * x))
+
+# Fit the curve
+params, _ = curve_fit(gompertz, x_scaled, y_scaled, p0=[1, 1, 1], maxfev=100000)
+
+# Extract the parameters
+a, b, c = params
+print(f"Fitted parameters: a = {a}, b = {b}, c = {c}")
+
+# Generate x values for the fitted curve
+x_fit = np.linspace(x.min(), x.max(), 1000)
+x_fit_scaled = x_fit / max(x)
+y_fit_scaled = gompertz(x_fit_scaled, a, b, c)
+y_fit = y_fit_scaled * max(y)
+
+# Plot the original data and the fitted curve
+plt.figure(figsize=(10, 6))
+plt.scatter(df['Date'], y, label='Original Data')
+plt.plot(np.array(df['Date'].min() + pd.to_timedelta(x_fit, unit='D')), y_fit, color='red', label='Fitted Gompertz Curve')
+plt.xlabel('Date')
+plt.ylabel('Gold Price')
+plt.title('Gold Prices with Gompertz Curve Fit')
+plt.legend()
+plt.show()
+
+
+Date	Value
+1/1/2024	300
+1/2/2024	700
+1/3/2024	600
+1/4/2024	800
+1/5/2024	900
+1/6/2024	700
+1/7/2024	1000
+1/8/2024	1250
+1/9/2024	1600
+1/10/2024	1650
+1/11/2024	1700
+1/12/2024	1800
+

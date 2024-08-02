@@ -1,0 +1,41 @@
+TSA 9
+#Forecasting by exponential smoothing.
+
+import pandas as pd
+from statsmodels.tsa.api import SimpleExpSmoothing, Holt
+import matplotlib.pyplot as plt
+
+# Example oil production data
+data = [446.6565, 454.4733, 455.663, 423.6322, 456.2713, 440.5881, 425.3325, 430.1494, 450.482, 460.420, 475.751, 485.951]
+index = pd.date_range(start="1996", end="2008", freq="Y")
+oildata = pd.Series(data, index)
+
+# Fit the SES model
+model_ses = SimpleExpSmoothing(oildata).fit(smoothing_level=0.2, optimized=False)
+
+# Fit Holt's model
+model_holt = Holt(oildata).fit(smoothing_level=0.6, smoothing_slope=0.2, optimized=False)
+
+# Forecast for the next 3 years
+forecast_ses = model_ses.forecast(steps=3)
+forecast_holt = model_holt.forecast(steps=3)
+
+# Plot the original data
+plt.figure(figsize=(10, 6))
+plt.plot(oildata, label='Original Data', marker='o')
+
+# Plot the SES forecast
+plt.plot(forecast_ses, label='SES Forecast', marker='o', linestyle='--')
+
+# Plot Holt's forecast
+plt.plot(forecast_holt, label="Holt's Forecast", marker='o', linestyle='--')
+
+# Add labels and title
+plt.xlabel('Year')
+plt.ylabel('Oil Production')
+plt.title('Oil Production with SES and Holt Forecasts')
+plt.legend()
+
+# Show the plot
+plt.show()
+

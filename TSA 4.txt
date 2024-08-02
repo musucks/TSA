@@ -1,0 +1,34 @@
+TSA 4
+#Fitting of trend by Moving Average Method
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Sample data (replace with your actual dataset)
+data = {
+    'Date': pd.date_range(start='2023-01-01', periods=100),
+    'Value': np.random.rand(100) * 100  # Random values for demonstration
+}
+
+df = pd.DataFrame(data)
+
+def moving_average(data, window_size):
+    ma = data['Value'].rolling(window=window_size, min_periods=1).mean()
+    return pd.DataFrame({'Date': data['Date'], 'Moving Average': ma})
+
+window_size = 7  # Example: 7-day moving average
+
+# Calculate moving average
+df_ma = moving_average(df, window_size)
+
+# Plotting
+plt.figure(figsize=(12, 6))
+plt.plot(df, label='Original Data', marker='o')
+plt.plot(df_ma, color='red', label=f'{window_size}-day Moving Average')
+plt.xlabel('Date')
+plt.ylabel('Value')
+plt.title('Trend Fitting using Moving Average Method')
+plt.legend()
+plt.grid(True)
+plt.show()

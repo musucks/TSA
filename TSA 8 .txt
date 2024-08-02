@@ -1,0 +1,58 @@
+TSA 8 
+#Calculation of variance of random component by variate difference method
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+#Given time series data 
+time_series = [47, 64, 23, 71, 38, 64, 55, 41, 59, 48]
+
+#Calculate differences 
+differences = np.diff(time_series)
+
+#Calculate mean of differences 
+mean_diff = np.mean(differences)
+
+# Calculate variance of differences 
+var_diff = np.var(differences, ddof=1)
+
+#Calculate variance of random components
+var_random  = var_diff / 2
+
+#Print results
+print(f"Mean of Differences: {mean_diff}")
+print (f"Variance of Differences: {var_diff}")
+print(f"Variance of Random Components: {var_random}")
+
+Mean_of_Differences: 0.1111111111111111
+Variance_of_Differences: 845.1111111111112
+Variance_of_Random_Components: 422.5555555555556
+
+# Plot the differences
+plt.plot(differences, marker='o')
+plt.title('Differences Between Successive Observations')
+plt.xlabel('Time') 
+plt.ylabel('Difference Value')
+plt.grid(True)
+plt.show()
+
+
+fig, axl = plt.subplots()
+
+color = 'tab:blue'
+axl.set_xlabel('Time')
+axl.set_ylabel('Time Series', color=color)
+axl.plot(time_series, marker='o', color=color, label='Time Series')
+axl.tick_params(axis='y', labelcolor=color)
+
+ax2=axl.twinx()
+color='tab:red'
+ax2.set_ylabel('Differences', color=color)
+ax2.plot(range(1, len(time_series)), differences, marker='x', linestyle='--', color=color, label='Differences')
+ax2.tick_params(axis='y', labelcolor=color)
+
+plt.title("Time Series and Differences")
+fig.tight_layout() # Adjust layout to make room for both y-axes
+plt.grid(True)
+plt.show()

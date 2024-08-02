@@ -1,0 +1,24 @@
+TSA 10
+#Forecasting by short term forecasting methods.
+
+import pandas as pd
+import matplotlib.pyplot as plt 
+from statsmodels.tsa.arima.model import ARIMA
+
+data = [112, 118, 132, 129, 121, 135, 148, 148, 136, 119, 104, 118, 115, 121, 158, 133, 114, 140, 145, 150, 178, 163, 172, 178, 199, 199, 184, 165]
+
+
+df = pd.DataFrame(data, columns=['value'])
+model = ARIMA(df['value'], order = (5, 1, 1)) # (p,d,q) order
+fit = model.fit()
+
+#Forecast future values
+forecast = fit.forecast(steps=10) # Forecast next 10 periods
+
+#Plot the results
+plt.figure(figsize=(10, 6))
+plt.plot(df['value'], label='Original')
+plt.plot(fit.fittedvalues, label='Fitted', linestyle='--')
+plt.plot(range(len(df), len(df) + 10), forecast, label='Forecast', linestyle='--')
+plt.legend()
+plt.show()
